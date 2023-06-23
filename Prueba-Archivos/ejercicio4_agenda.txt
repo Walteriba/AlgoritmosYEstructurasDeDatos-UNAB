@@ -1,0 +1,5 @@
+AGENDA
+Walter Ibarrola,1168970207,walteribarrola@gmail.com,125 995
+Karim Ibarrola,111111,mylife@gmail.com,125 995
+Ivan Garcia,123456,ivangarcia@gmail.com,125 993
+Larry Katanga,None,None,None
