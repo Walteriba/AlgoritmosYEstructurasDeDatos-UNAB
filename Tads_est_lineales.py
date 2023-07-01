@@ -54,7 +54,7 @@ class ListaEnlazada(object):
         else:
             n_ant = self.prim
             n_act = n_ant.prox
-        for pos in xrange(1, i):
+        for pos in range(1, i):
             n_ant = n_act 
             n_act = n_ant.prox
          # Guarda el dato y elimina el nodo a borrar
@@ -107,7 +107,7 @@ class ListaEnlazada(object):
         # Insertar en cualquier lugar > 0
         else:
     # Recorre la lista hasta llegar a la posición deseada n_ant = self.prim
-            for pos in xrange(1,i):
+            for pos in range(1,i):
                 n_ant = n_ant.prox
     # Intercala nuevo y obtiene n_ant -> nuevo -> n_ant.prox
                 nuevo.prox = n_ant.prox 
@@ -186,7 +186,7 @@ class Pila:
             raise ValueError("La pila está vacía")
 
     def top(P):
-        if is_empry : pass
+        if P.is_empty() : pass
         x = P.pop
         P.push(x)
         return x
