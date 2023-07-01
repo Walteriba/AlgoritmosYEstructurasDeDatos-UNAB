@@ -195,7 +195,7 @@ class Pila:
 
 #####################
 
-
+"""
 class ArrayStack:
 ”””LIFO Stack implementation using a Python list as underlying storage.”””
 def init (self):
@@ -219,7 +219,7 @@ Raise Empty exception if the stack is empty. ”””
 if self.is empty():
 raise Empty( Stack is empty )
 return self. data.pop( ) # remove last item from list
-
+"""
 
 #########################
 
@@ -258,7 +258,7 @@ class Cola:
 
 
 ########################
-
+"""
 class ArrayQueue:
 ”””FIFO queue implementation using a Python list as underlying storage.””” DEFAULT CAPACITY = 10 # moderate capacity for all new queues
 def init (self):
@@ -301,7 +301,7 @@ walk = (1 + walk) % len(old) self. front = 0
 # only consider existing elements # intentionally shift indices
 # use old size as modulus
 # front has been realigned
-
+"""
 
 
 ###########################
