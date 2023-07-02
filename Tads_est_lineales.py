@@ -22,15 +22,6 @@ class ListaEnlazada(object):
         self.prim = None
     # len: longitud de la lista - 0 con la lista vacía 
         self.len = 0
-
-class ListaEnlazada(object):
-    " Modela una lista enlazada, compuesta de Nodos. "
-    def __init__(self):
-        """ Crea una lista enlazada vacía. """
-    # prim: apuntará al primer nodo - None con la lista vacía 
-        self.prim = None
-    # len: longitud de la lista - 0 con la lista vacía 
-        self.len = 0
     
     def __iter__(self):
         " Devuelve el iterador de la lista. " 
@@ -39,30 +30,30 @@ class ListaEnlazada(object):
     def pop(self, i = None):
         """ Elimina el nodo de la posición i, y devuelve el dato contenido.
             Si i está fuera de rango, se levanta la excepción IndexError. Si no se recibe la posición, devuelve el último elemento. """
-    # Si no se recibió i, se devuelve el último.
+        # Si no se recibió i, se devuelve el último.
         if i is None:
             i = self.len - 1
-     # Verificación de los límites
+        # Verificación de los límites
             if not (0 <= i < self.len):
                 raise IndexError("Índice fuera de rango")
-# Caso particular, si es el primero,
-# hay que saltear la cabecera de la lista 
+        # Caso particular, si es el primero,
+        # hay que saltear la cabecera de la lista 
         if i==0:
             dato = self.prim.dato 
             self.prim = self.prim.prox
-     # Para todos los demás elementos, busca la posición
+        # Para todos los demás elementos, busca la posición
         else:
             n_ant = self.prim
             n_act = n_ant.prox
         for pos in range(1, i):
             n_ant = n_act 
             n_act = n_ant.prox
-         # Guarda el dato y elimina el nodo a borrar
+        # Guarda el dato y elimina el nodo a borrar
             dato = n_act.dato 
             n_ant.prox = n_act.prox
-     # hay que restar 1 de len
+        # hay que restar 1 de len
             self.len -= 1
-     # y devolver el valor borrado
+        # y devolver el valor borrado
         return dato
  
 
@@ -86,7 +77,7 @@ class ListaEnlazada(object):
             # Si no se encontró a x en la lista, levanta la excepción
         if n_act == None:
             raise ValueError("El valor no está en la lista.")
-    # Si encontró a x, debe pasar de n_ant -> n_x -> n_x.prox # a n_ant -> n_x.prox
+        # Si encontró a x, debe pasar de n_ant -> n_x -> n_x.prox # a n_ant -> n_x.prox
         else:
             n_ant.prox = n_act.prox
         # Si no levantó excepción, hay que restar 1 del largo
@@ -100,16 +91,16 @@ class ListaEnlazada(object):
         nuevo = _Nodo(x)
         # Insertar al principio (caso particular)
         if i==0:
-    # el siguiente del nuevo pasa a ser el que era primero 
+        # el siguiente del nuevo pasa a ser el que era primero 
             nuevo.prox = self.prim
-    # el nuevo pasa a ser el primero de la lista
+        # el nuevo pasa a ser el primero de la lista
             self.prim = nuevo
         # Insertar en cualquier lugar > 0
         else:
-    # Recorre la lista hasta llegar a la posición deseada n_ant = self.prim
+        # Recorre la lista hasta llegar a la posición deseada n_ant = self.prim
             for pos in range(1,i):
                 n_ant = n_ant.prox
-    # Intercala nuevo y obtiene n_ant -> nuevo -> n_ant.prox
+        # Intercala nuevo y obtiene n_ant -> nuevo -> n_ant.prox
                 nuevo.prox = n_ant.prox 
                 n_ant.prox = nuevo
         # En cualquier caso, incrementar en 1 la longitud
