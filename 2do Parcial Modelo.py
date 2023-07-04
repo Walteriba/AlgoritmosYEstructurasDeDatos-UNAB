@@ -146,37 +146,6 @@ class ListaProductosEnlazada():
     def __iter__(self):
         return IteradorListaEnlazada(self)  
 
-
-#-------- Cola de la Panadería ------------# 
-class ColaClientes():
-    """ Representa a una cola, con operaciones de encolar y
-    desencolar. El primero en ser encolado es también el primero en ser desencolado. """
-
-    def __init__(self,cola=[]):
-        """ Se le pasa una cola, sino crea una vacia """
-        # La cola vacía se representa por una lista vacía 
-        self.cola = cola
-        
-    def __str__(self):
-        return str(self.cola)
-    
-    def encolar(self, x):
-        """ Agrega el elemento x como último de la cola. """ 
-        self.cola.append(x)
-
-    def desencolar(self):
-        """ Elimina el primer elemento de la cola y devuelve su
-        valor. Si la cola está vacía, levanta ValueError. """
-        try:
-            return self.cola.pop(0)
-        except:
-            raise ValueError("La cola está vacía")
-            
-    #Por último, el método es_vacia, que indicará si la cola está o no vacía.
-    def cola_vacia(self):
-        """ Devuelve True si la cola esta vacía, False si no.""" 
-        return self.items == []
- 
     
 #-------- Iterador ------------# 
 class IteradorListaEnlazada:
@@ -251,11 +220,95 @@ class IteradorListaEnlazada:
     """
 
 
+#-------- Cola de la Panadería ------------# 
+class ColaClientes():
+    """ Representa a una cola, con operaciones de encolar y
+    desencolar. El primero en ser encolado es también el primero en ser desencolado. """
+
+    def __init__(self,cola=[]):
+        """ Se le pasa una cola, sino crea una vacia """
+        # La cola vacía se representa por una lista vacía 
+        self.cola = cola
+        
+    def __str__(self):
+        return str(self.cola)
+    
+    def encolar(self, x):
+        """ Agrega el elemento x como último de la cola. """ 
+        self.cola.append(x)
+
+    def desencolar(self):
+        """ Elimina el primer elemento de la cola y devuelve su
+        valor. Si la cola está vacía, levanta ValueError. """
+        try:
+            return self.cola.pop(0)
+        except:
+            raise ValueError("La cola está vacía")
+            
+    #Por último, el método es_vacia, que indicará si la cola está o no vacía.
+    def cola_vacia(self):
+        """ Devuelve True si la cola esta vacía, False si no.""" 
+        return self.items == []
+
+
 #-------- Panaderia ------------# 
 class Panaderia:
-    def __init__(self):
-        pass
-          
+    def __init__(self,nombre,direccion,telefono,inventario,aptaceliacos=False,horarios=None):
+        self.nombre=nombre
+        self.direccion=direccion
+        self.telefono=telefono
+        self.inventario=inventario # esta variable es la que guarda la lista enlazada
+        self.aptoceliacos=aptaceliacos
+        self.horarios=horarios   
+    
+    def apta_celiacos(self):
+        return self.aptoceliacos
+    
+    def buscar_producto_por_nombre(self, nombre): #devuelve el precio del producto
+        # Obtener la lista enlazada de productos
+        lista_productos = self.inventario
+        # Iniciar la búsqueda desde el primer nodo
+        nodo_actual = lista_productos.prim
+        # Realizar la búsqueda en la lista enlazada
+        while nodo_actual is not None:
+            if nodo_actual.dato.nombre == nombre:
+                # El producto ha sido encontrado
+                return nodo_actual.dato.precio
+            nodo_actual = nodo_actual.prox
+        # El producto no se encontró en la lista
+        return None
+
+    
+    def ordenar_por_precio(self):
+        # Obtener la lista enlazada de productos
+        lista_productos = self.inventario
+        # Obtener la lista de productos como una lista de Python
+        productos = lista_productos.retornar_lista()
+        # Implementar el algoritmo de ordenamiento de selección
+        for i in range(len(productos)):
+            min_index = i
+            for j in range(i + 1, len(productos)):
+                if productos[j].precio < productos[min_index].precio:
+                    min_index = j
+            productos[i], productos[min_index] = productos[min_index], productos[i]
+        # Actualizar la lista enlazada con los productos ordenados
+        lista_productos_enlazada = ListaProductosEnlazada()
+        for producto in productos:
+            lista_productos_enlazada.insertar_al_final(producto)
+        # Actualizar el inventario de la panadería
+        self.inventario = lista_productos_enlazada
+
+   
+
+class ProductoPanaderia: #esto es lo que se va a guardar en cada nodo
+    def __init__(self,nombre,precio,descripcion):
+        self.nombre=nombre
+        self.descripcion=descripcion
+        self.precio=precio
+    
+    def __str__(self):
+            return f"{self.nombre},{self.precio},{self.descripcion}"
+
 
 
 #----------- Probando el código ----------- #
@@ -300,3 +353,22 @@ c.encolar("Walter")
 c.encolar("Karim")
 c.encolar("Ivan")
 print(c)
+
+print("PROBANDO ORDENAMIENTO")
+panaderia = Panaderia("Mi Panadería", "Calle Principal", "123456789", ListaProductosEnlazada())
+panaderia.inventario.insertar_al_final(ProductoPanaderia("Pan", 2.5, "Pan fresco"))
+panaderia.inventario.insertar_al_final(ProductoPanaderia("Tarta", 12.0, "Tarta de frutas"))
+panaderia.inventario.insertar_al_final(ProductoPanaderia("Croissant", 1.8, "Croissant de mantequilla"))
+
+print("Productos antes de ordenar:")
+for producto in panaderia.inventario.retornar_lista():
+    print(producto,producto.precio)
+
+panaderia.ordenar_por_precio()
+
+print("Productos después de ordenar:")
+for producto in panaderia.inventario: #puedo recorrer la llista sin la funcion retornar lista, porque tengo construido un iterador
+    print(producto,producto.precio)
+
+print("PRECIO DEL PAN UTILIZANDO FUNCION DE BUSQUEDA")
+print(panaderia.buscar_producto_por_nombre("Pan"))
