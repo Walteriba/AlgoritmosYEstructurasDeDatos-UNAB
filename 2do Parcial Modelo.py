@@ -220,37 +220,6 @@ class IteradorListaEnlazada:
     """
 
 
-#-------- Cola de la Panadería ------------# 
-class ColaClientes():
-    """ Representa a una cola, con operaciones de encolar y
-    desencolar. El primero en ser encolado es también el primero en ser desencolado. """
-
-    def __init__(self,cola=[]):
-        """ Se le pasa una cola, sino crea una vacia """
-        # La cola vacía se representa por una lista vacía 
-        self.cola = cola
-        
-    def __str__(self):
-        return str(self.cola)
-    
-    def encolar(self, x):
-        """ Agrega el elemento x como último de la cola. """ 
-        self.cola.append(x)
-
-    def desencolar(self):
-        """ Elimina el primer elemento de la cola y devuelve su
-        valor. Si la cola está vacía, levanta ValueError. """
-        try:
-            return self.cola.pop(0)
-        except:
-            raise ValueError("La cola está vacía")
-            
-    #Por último, el método es_vacia, que indicará si la cola está o no vacía.
-    def cola_vacia(self):
-        """ Devuelve True si la cola esta vacía, False si no.""" 
-        return self.items == []
-
-
 #-------- Panaderia ------------# 
 class Panaderia:
     def __init__(self,nombre,direccion,telefono,inventario,aptaceliacos=False,horarios=None):
@@ -297,18 +266,63 @@ class Panaderia:
             lista_productos_enlazada.insertar_al_final(producto)
         # Actualizar el inventario de la panadería
         self.inventario = lista_productos_enlazada
-
-   
-
-class ProductoPanaderia: #esto es lo que se va a guardar en cada nodo
-    def __init__(self,nombre,precio,descripcion):
-        self.nombre=nombre
-        self.descripcion=descripcion
-        self.precio=precio
     
-    def __str__(self):
-            return f"{self.nombre},{self.precio},{self.descripcion}"
+    def atender(self, cola):
+        while not cola.vacia():
+            cliente = cola.desencolar()  # Desencola el cliente de la cola y lo guarda para trabajar en él
+            carrito = sum(self.buscar_producto_por_nombre(nombre) for nombre in cliente.lista)  # Sumar el costo de los productos
+            if carrito <= cliente.dinero:
+                cliente.dinero -= carrito
+                print(f"{cliente.nombre}: Compra realizada, su vuelto es {cliente.dinero} $")
+            else:
+                print(f"{cliente.nombre}: Dinero insuficiente")
+        print("Todos atendidos")
+                    
+class ProductoPanaderia:
+    def __init__(self, nombre, precio, descripcion):
+        self.nombre = nombre
+        self.descripcion = descripcion
+        self.precio = precio
 
+    def __str__(self):
+        return f"Nombre: {self.nombre}, Precio: {self.precio}, Descripción: {self.descripcion}"
+
+#-------- Cliente ------------#
+class Cliente:
+    def __init__(self,nombre,lista,dinero):
+        self.nombre=nombre
+        self.lista=lista
+        self.dinero=dinero
+        
+
+#-------- Cola de la Panadería ------------# 
+class ColaClientes():
+    """ Representa a una cola, con operaciones de encolar y
+    desencolar. El primero en ser encolado es también el primero en ser desencolado. """
+
+    def __init__(self,cola=[]):
+        """ Se le pasa una cola, sino crea una vacia """
+        # La cola vacía se representa por una lista vacía 
+        self.cola = cola
+        
+    def __str__(self):
+        return str(self.cola)
+    
+    def encolar(self, x):
+        """ Agrega el elemento x como último de la cola. """ 
+        self.cola.append(x)
+
+    def desencolar(self):
+        """ Elimina el primer elemento de la cola y devuelve su
+        valor. Si la cola está vacía, levanta ValueError. """
+        try:
+            return self.cola.pop(0)
+        except:
+            raise ValueError("La cola está vacía")
+            
+    def vacia(self):
+        """ Devuelve True si la cola esta vacía, False si no.""" 
+        return self.cola == []
 
 
 #----------- Probando el código ----------- #
@@ -347,18 +361,13 @@ l.pop(2)
 for x in l:
     print(x)
 
-print("PROBANDO COLACLIENTES")
-c=ColaClientes()
-c.encolar("Walter")
-c.encolar("Karim")
-c.encolar("Ivan")
-print(c)
-
 print("PROBANDO ORDENAMIENTO")
+
 panaderia = Panaderia("Mi Panadería", "Calle Principal", "123456789", ListaProductosEnlazada())
 panaderia.inventario.insertar_al_final(ProductoPanaderia("Pan", 2.5, "Pan fresco"))
 panaderia.inventario.insertar_al_final(ProductoPanaderia("Tarta", 12.0, "Tarta de frutas"))
 panaderia.inventario.insertar_al_final(ProductoPanaderia("Croissant", 1.8, "Croissant de mantequilla"))
+
 
 print("Productos antes de ordenar:")
 for producto in panaderia.inventario.retornar_lista():
@@ -372,3 +381,17 @@ for producto in panaderia.inventario: #puedo recorrer la llista sin la funcion r
 
 print("PRECIO DEL PAN UTILIZANDO FUNCION DE BUSQUEDA")
 print(panaderia.buscar_producto_por_nombre("Pan"))
+
+prueba=panaderia.inventario.retornar_lista()
+print([str(producto) for producto in prueba])
+
+
+print("PROBANDO COLACLIENTES")
+c1=Cliente("Walter",["Pan","Tarta"],15)
+c2=Cliente("Karim",["Tarta"],10)
+
+cola=ColaClientes()
+cola.encolar(c1)
+cola.encolar(c2)
+
+panaderia.atender(cola)
