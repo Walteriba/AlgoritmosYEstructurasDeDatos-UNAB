@@ -7,7 +7,7 @@
 6)Mover un directorio(Archivos (Ej. 8, Pract. 11))
 Extra: importar uno o varios módulos
 """
-
+import pickle
 
 #-------- Lista de Productos Enlazada ------------# 
 class ListaProductosEnlazada():
@@ -145,6 +145,21 @@ class ListaProductosEnlazada():
     #Para que responda al Iterador
     def __iter__(self):
         return IteradorListaEnlazada(self)  
+    
+    #Para guardar y recuperar en un archivo
+    def guardar_en_archivo(self, archivo):
+        contenido = self.retornar_lista()
+        with open(archivo, 'wb') as file: #se abre en modo escritura binaria
+            pickle.dump(contenido, file) #se guarda en modo binario con este moludo
+
+    @staticmethod
+    def recuperar_de_archivo(archivo):
+        lista = ListaProductosEnlazada()
+        with open(archivo, 'rb') as file:
+            contenido = pickle.load(file)
+            for dato in contenido:
+                lista.insertar_al_final(dato)
+        return lista
 
     
 #-------- Iterador ------------# 
@@ -277,6 +292,8 @@ class Panaderia:
             else:
                 print(f"{cliente.nombre}: Dinero insuficiente")
         print("Todos atendidos")
+        
+    
                     
 class ProductoPanaderia:
     def __init__(self, nombre, precio, descripcion):
@@ -395,3 +412,9 @@ cola.encolar(c1)
 cola.encolar(c2)
 
 panaderia.atender(cola)
+
+print("PROBANDO GUARDAR Y RECUPERAR LISTA")
+panaderia.inventario.guardar_en_archivo("Parcial_2.txt")
+listarecuperada=panaderia.inventario.recuperar_de_archivo("Parcial_2.txt")
+for producto in listarecuperada:
+    print(producto)
