@@ -315,7 +315,7 @@ def buscar_libro_por_titulo(titulo):
     return None
 
 
-def cargar_libros_disponibles():
+def cargar_libros_disponibles(biblioteca):
     with open("inventario/libros_disponibles.txt", "r") as archivo:
         lineas = archivo.readlines()
         for linea in lineas:
@@ -327,7 +327,7 @@ def cargar_libros_disponibles():
             libro = Libro(titulo, edicion, fecha, sinopsis)
             biblioteca.libros_disponibles.insertar_al_final(libro)
 
-def cargar_libros_prestados():
+def cargar_libros_prestados(biblioteca):
     with open("inventario/libros_prestados.txt", "r") as archivo:
         lineas = archivo.readlines()
         for linea in lineas:
